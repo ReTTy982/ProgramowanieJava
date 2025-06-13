@@ -1,10 +1,7 @@
 package wsb.merito.model;
 
-import java.util.Objects;
-import java.util.UUID;
-
 public class Product {
-    private final UUID id;
+
     private String name;
     private Float price;
     private Category category;
@@ -13,7 +10,6 @@ public class Product {
 
 
     public Product(String name, Float price, Category category, Integer stock) {
-        this.id = UUID.randomUUID();
         this.name = name;
         this.price = price;
         this.category = category;
@@ -22,11 +18,7 @@ public class Product {
         validate();
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    private void updateAvailable() {
+    private void updateAvailable(){
         this.isAvailable = stock != null && stock > 0;
     }
 
@@ -71,8 +63,7 @@ public class Product {
     @Override
     public String toString() {
         return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
                 ", price=" + price +
                 ", category='" + category + '\'' +
                 ", stock=" + stock +
@@ -87,18 +78,6 @@ public class Product {
         if (stock == null || stock < 0) throw new IllegalArgumentException();
     }
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof Product)) return false;
-        Product product = (Product) o;
-        return Objects.equals(id, product.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
 }
 
 

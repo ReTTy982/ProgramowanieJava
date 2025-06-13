@@ -1,10 +1,8 @@
 package wsb.merito.service;
 
 import wsb.merito.model.Cart;
-import wsb.merito.model.DiscountType;
 import wsb.merito.model.Product;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -13,7 +11,9 @@ public class CartService {
     private static CartService INSTANCE;
     private final Cart cart;
 
+
     private DiscountType discountType;
+
 
     private CartService(Cart cart) {
         this.cart = cart;
@@ -45,6 +45,7 @@ public class CartService {
     public List<String> getProductSummaries() {
         Map<Product, Integer> items = cart.getItems();
         return items.entrySet().stream()
+
                 .map(entry -> entry.getKey().getName() + ", " + entry.getValue() + " szt." + " " + entry.getKey()
                         .getPrice() + "zł").collect(Collectors.toList());
     }
@@ -71,48 +72,13 @@ public class CartService {
             case DiscountType.TWO_FOR_ONE -> applyTwoForOneDiscount();
             default -> fullPrice;
         };
+
     }
 
-    private float applyPercentageDiscount(float fullPrice) {
-        return fullPrice * 0.9f;
-    }
-
-    private float applyCheapestForPennyDiscount() {
-        List<Product> productsSorted = cart.getItems().entrySet().stream().flatMap(entry -> {
-            Product product = entry.getKey();
-            int quantity = entry.getValue();
-            return java.util.Collections.nCopies(quantity, product).stream();
-        }).sorted(Comparator.comparing(Product::getPrice)).toList();
-
-        int totalQuantity = cart.getItems().values().stream().mapToInt(Integer::intValue).sum();
-
-        int pennyCount = totalQuantity / 3;
-        float discountedPrice = 0f;
-
-        for (int i = 0; i < productsSorted.size(); i++) {
-            if (i < pennyCount) {
-                discountedPrice += 1.0f;
-            } else {
-                discountedPrice += productsSorted.get(i).getPrice();
-            }
-        }
-
-        return discountedPrice;
-    }
-
-    private float applyTwoForOneDiscount() {
-        float discountedPrice = 0f;
-        for (Map.Entry<Product, Integer> entry : cart.getItems().entrySet()) {
-            Product product = entry.getKey();
-            int quantity = entry.getValue();
-            float price = product.getPrice();
-            int pairs = quantity / 2;
-            int remaining = quantity % 2;
-
-            discountedPrice += pairs * price * 1.5f;
-            discountedPrice += remaining * price;
-        }
-        return discountedPrice;
+    public float getTotalPrice() {
+        return (float) cart.getItems().entrySet().stream()
+                .mapToDouble(entry -> entry.getKey().getPrice() * entry.getValue())
+                .sum();
     }
 
     public boolean isEmpty() {
@@ -122,6 +88,7 @@ public class CartService {
     public void clearCart() {
         cart.clear();
     }
+
 
     public void setDiscountType(DiscountType discountType) {
         this.discountType = discountType;
