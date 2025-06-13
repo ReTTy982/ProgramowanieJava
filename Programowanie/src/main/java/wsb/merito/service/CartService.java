@@ -13,7 +13,7 @@ public class CartService {
     private static CartService INSTANCE;
     private final Cart cart;
 
-    private Enum<DiscountType> discountType;
+    private DiscountType discountType;
 
     private CartService(Cart cart) {
         this.cart = cart;
@@ -30,15 +30,30 @@ public class CartService {
         cart.addProduct(product);
     }
 
+    public void addProduct(Product product, int quantity) {
+        cart.addProduct(product, quantity);
+    }
+
     public void removeProduct(Product product) {
         cart.removeProduct(product);
+    }
+
+    public void removeProduct(Product product, int quantity) {
+        cart.removeProduct(product, quantity);
     }
 
     public List<String> getProductSummaries() {
         Map<Product, Integer> items = cart.getItems();
         return items.entrySet().stream()
                 .map(entry -> entry.getKey().getName() + ", " + entry.getValue() + " szt." + " " + entry.getKey()
-                        .getPrice() + "zł\n").collect(Collectors.toList());
+                        .getPrice() + "zł").collect(Collectors.toList());
+    }
+
+    public List<String> getProductSummariesWithId() {
+        Map<Product, Integer> items = cart.getItems();
+        return items.entrySet().stream().map(entry -> entry.getKey().getId() + "|" + entry.getKey()
+                        .getName() + ", " + entry.getValue() + " szt." + " " + entry.getKey().getPrice() + "zł")
+                .collect(Collectors.toList());
     }
 
 
@@ -108,7 +123,27 @@ public class CartService {
         cart.clear();
     }
 
-    public void setDiscountType(Enum<DiscountType> discountType) {
+    public void setDiscountType(DiscountType discountType) {
         this.discountType = discountType;
+    }
+
+    public DiscountType getDiscountType(){
+        return this.discountType;
+    }
+
+    public List<String> getDiscountTypeListNumbered() {
+        DiscountType[] types = DiscountType.values();
+        List<String> result = new java.util.ArrayList<>();
+        for (int i = 0; i < types.length; i++) {
+            result.add(i + ". " + types[i].name());
+        }
+        return result;
+    }
+
+    public boolean setDiscountTypeByIndex(int index) {
+        DiscountType[] types = DiscountType.values();
+        if (index < 0 || index >= types.length) return false;
+        this.discountType = types[index];
+        return true;
     }
 }
