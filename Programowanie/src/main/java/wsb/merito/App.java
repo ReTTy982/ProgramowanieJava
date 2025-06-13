@@ -24,21 +24,6 @@ public class App {
         boolean running = true;
 
 
-        cartService.setDiscountType(DiscountType.CHEAPEST_FOR_PENNY);
-        var products = catalogService.getCatalog();
-        cartService.addProduct(products.get(0));
-        cartService.addProduct(products.get(1));
-        cartService.addProduct(products.get(1));
-        cartService.addProduct(products.get(2));
-        cartService.addProduct(products.get(2));
-        cartService.addProduct(products.get(2));
-        cartService.addProduct(products.get(3));
-        cartService.addProduct(products.get(4));
-        cartService.addProduct(products.get(4));
-        cartService.addProduct(products.get(4));
-        cartService.addProduct(products.get(4));
-        cartService.getFinalPrice();
-
         String menuMessage = """
                 -------------------------
                 1. Pokaż katalog
