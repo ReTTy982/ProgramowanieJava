@@ -9,8 +9,11 @@ public class Cart {
 
     public void addProduct(Product product) {
         if (product == null) return;
-
         items.merge(product, 1, Integer::sum);
+    }
+    public void addProduct(Product product, int quantity){
+        if (product == null) return;
+        items.merge(product, quantity, Integer::sum);
     }
 
     public Map<Product, Integer> getItems() {
@@ -25,6 +28,17 @@ public class Cart {
             items.put(product, currentQuantity - 1);
         } else {
             items.remove(product);
+        }
+    }
+
+    public void removeProduct(Product product, int quantity) {
+        if (product == null || quantity <= 0 || !items.containsKey(product)) return;
+
+        int currentQuantity = items.get(product);
+        if (quantity >= currentQuantity) {
+            items.remove(product);
+        } else {
+            items.put(product, currentQuantity - quantity);
         }
     }
 
