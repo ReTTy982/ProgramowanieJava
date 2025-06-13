@@ -6,6 +6,7 @@ import wsb.merito.model.Product;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class CatalogService {
@@ -47,5 +48,13 @@ public class CatalogService {
                 .sorted(Comparator.comparing(Product::getPrice))
                 .map(p -> p.getName() + " - " + p.getPrice() + " PLN")
                 .collect(Collectors.toList());
+    }
+
+    public Product findProductById(UUID id) {
+        return catalog.getProducts().stream().filter(p -> p.getId().equals(id)).findFirst().orElse(null);
+    }
+
+    public List<Product> getCatalog() {
+        return List.copyOf(catalog.getProducts());
     }
 }
