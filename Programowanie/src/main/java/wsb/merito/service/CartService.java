@@ -141,6 +141,10 @@ public class CartService {
     }
 
     public boolean setDiscountTypeByIndex(int index) {
+        if (index == -1) {
+            this.discountType = null;
+            return true;
+        }
         DiscountType[] types = DiscountType.values();
         if (index < 0 || index >= types.length) return false;
         this.discountType = types[index];

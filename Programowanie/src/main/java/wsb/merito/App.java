@@ -37,7 +37,6 @@ public class App {
         cartService.addProduct(products.get(4));
         cartService.addProduct(products.get(4));
         cartService.addProduct(products.get(4));
-        //System.out.println(cartService.getProductSummaries());
         cartService.getFinalPrice();
 
         String menuMessage = """
@@ -49,6 +48,7 @@ public class App {
                 5. Koszyk - Dodaj produkty
                 6. Koszyk - Usuń produkty
                 7. Zastosuj promocję
+                8. Usuń wszystkie przedmioty z koszyka
                 0. Wyjdź z programu
                 -------------------------
                 Wybierz opcję:
@@ -120,12 +120,14 @@ public class App {
                 case "7": {
                     System.out.println("Dostępne promocje:");
                     cartService.getDiscountTypeListNumbered().forEach(System.out::println);
+                    System.out.println("-1. Brak promocji");
 
                     System.out.print("Wybierz numer promocji: ");
                     try {
                         int discountIndes = Integer.parseInt(scanner.nextLine());
                         if (cartService.setDiscountTypeByIndex(discountIndes)) {
-                            System.out.println("Promocja ustawiona na: " + cartService.getDiscountType());
+                            DiscountType active = cartService.getDiscountType();
+                            System.out.println("Promocja ustawiona na: " + (active != null ? active : "brak"));
                         } else {
                             System.out.println("Niepoprawny numer promocji.");
                         }
@@ -135,6 +137,9 @@ public class App {
                     }
                     break;
                 }
+                case "8":
+                    cartService.clearCart();
+                    break;
                 case "0":
                     running = false;
                     break;
