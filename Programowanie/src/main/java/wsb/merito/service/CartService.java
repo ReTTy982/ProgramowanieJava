@@ -2,6 +2,7 @@ package wsb.merito.service;
 
 import wsb.merito.model.Cart;
 import wsb.merito.model.Product;
+import wsb.merito.model.SpecialOffer;
 
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 public class CartService {
     private static CartService INSTANCE;
     private final Cart cart;
+    private List<SpecialOffer> selectedOffers;
 
     private CartService(Cart cart) {
         this.cart = cart;
@@ -28,6 +30,21 @@ public class CartService {
 
     public void removeProduct(Product product) {
         cart.removeProduct(product);
+    }
+
+    public void addSpecialOffer(SpecialOffer specialoffer) {
+        if (specialoffer == null || !specialoffer.checkActive()) {
+            throw new IllegalArgumentException("Invalid or inactive promotion.");
+        }
+        selectedOffers.add(specialoffer);
+    }
+
+    public void removeSpecialOffer(SpecialOffer specialoffer) {
+        selectedOffers.remove(specialoffer);
+    }
+
+    public void removeOfferByName(String name) {
+        selectedOffers.removeIf(offer -> offer.getName().equalsIgnoreCase(name));
     }
 
     public List<String> getProductSummaries() {
